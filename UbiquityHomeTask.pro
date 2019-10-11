@@ -19,11 +19,13 @@ SOURCES += \
     loading.cpp \
     main.cpp \
     mainwindow.cpp \
+    roundprogressbar.cpp \
     timedate.cpp
 
 HEADERS += \
     loading.h \
     mainwindow.h \
+    roundprogressbar.h \
     timedate.h
 
 FORMS += \

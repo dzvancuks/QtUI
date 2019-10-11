@@ -1,11 +1,10 @@
 #ifndef LOADING_H
 #define LOADING_H
 
+#include "roundprogressbar.h"
+
 #include <QFrame>
 #include <QThread>
-
-#include <chrono>
-#include <thread>
 
 namespace Ui {
 class Loading;
@@ -41,6 +40,7 @@ public:
 
 private:
     Ui::Loading *ui;
+    RoundProgressBar *bar;
     LoaderIncrementerThread lic;
 
 private slots:
