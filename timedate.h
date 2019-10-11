@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::TimeDate *ui;
+
+private slots:
+    void showTime();
 };
 
 #endif // TIMEDATE_H
