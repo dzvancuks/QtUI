@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <thread>
+#include <mutex>
 
 Loading::Loading(QWidget *parent) :
     QFrame(parent),
@@ -75,9 +76,10 @@ void LoaderIncrementerThread::run()
 {
     while(!abort && progress < 100)
     {
-        m.lock();
-        this->progress++;
-        m.unlock();
+        {
+            std::lock_guard<std::mutex> lock(m);
+            this->progress++;
+        }
         emit value_changed();
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
@@ -85,9 +87,6 @@ void LoaderIncrementerThread::run()
 
 int LoaderIncrementerThread::get() const
 {
-    int ret;
-    m.lock();
-    ret = progress;
-    m.unlock();
-    return ret;
+    std::lock_guard<std::mutex> lock(m);
+    return progress;
 }
