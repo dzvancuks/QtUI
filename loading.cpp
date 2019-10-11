@@ -17,14 +17,6 @@ Loading::Loading(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // TODO make opaque and remove this code as main window is black ?
-    // set black background
-    QPalette pal = palette();
-    pal.setColor(QPalette::Background, Qt::black);
-    this->setAutoFillBackground(true);
-    this->setPalette(pal);
-    this->show();
-
     QVBoxLayout *layout = new QVBoxLayout(this);
     bar = new RoundProgressBar();
     layout->addWidget(bar);
@@ -37,7 +29,15 @@ Loading::Loading(QWidget *parent) :
 Loading::~Loading()
 {
     delete ui;
-    if(lic.isRunning()) lic.wait();
+    if(lic.isRunning())
+    {
+        // try graceful shutdownm then terminate
+        lic.abort = true;
+        if(!lic.wait(1000))
+        {
+            lic.terminate();
+        }
+    }
 }
 
 void Loading::fade_out()
@@ -45,19 +45,18 @@ void Loading::fade_out()
     QGraphicsOpacityEffect *eff = new QGraphicsOpacityEffect(this);
     this->setGraphicsEffect(eff);
     QPropertyAnimation *animation = new QPropertyAnimation(eff, "opacity");
+    connect(animation, &QPropertyAnimation::finished, this, &Loading::hide_me);
     animation->setDuration(1500);
     animation->setStartValue(1);
     animation->setEndValue(0);
     animation->setEasingCurve(QEasingCurve::Linear);
     animation->start(QPropertyAnimation::DeleteWhenStopped);
-    connect(animation, &QPropertyAnimation::finished, this, &Loading::hide_me);
 }
 
 void Loading::show_progress()
 {
     int progress = lic.get();
-    QString loaded = QString::number(progress);
-    ui->lbl_loaded->setText(loaded);
+    ui->lbl_loaded->setText(QString::number(progress));
     bar->upd(static_cast<double>(progress) / 100);
 }
 
@@ -74,7 +73,7 @@ void Loading::hide_me()
 
 void LoaderIncrementerThread::run()
 {
-    while(progress < 100)
+    while(!abort && progress < 100)
     {
         m.lock();
         this->progress++;

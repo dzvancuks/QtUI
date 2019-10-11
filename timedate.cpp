@@ -11,13 +11,6 @@ TimeDate::TimeDate(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // set black background
-    QPalette pal = palette();
-    pal.setColor(QPalette::Background, Qt::black);
-    this->setAutoFillBackground(true);
-    this->setPalette(pal);
-    this->show();
-
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &TimeDate::showTime);
     timer->start(1000);

@@ -21,6 +21,7 @@ public:
 
     void run() override;
     int get() const;
+    bool abort = false; // terminate is unsafe, use flag workaround
 
 signals:
     void value_changed();
