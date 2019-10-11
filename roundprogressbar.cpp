@@ -21,7 +21,7 @@ void RoundProgressBar::paintEvent(QPaintEvent *) {
 
     int border_offset = pen_width/2;
     path.moveTo(width()/2, border_offset);
-    path.arcTo(QRectF(border_offset, border_offset, width()-border_offset, height()-border_offset), 90, -progress * 360);
+    path.arcTo(QRectF(border_offset, border_offset, width()-pen_width, height()-pen_width), 90, -progress * 360);
 
     QPen pen;
     pen.setCapStyle(Qt::RoundCap);

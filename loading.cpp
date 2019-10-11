@@ -28,7 +28,6 @@ Loading::Loading(QWidget *parent) :
     QVBoxLayout *layout = new QVBoxLayout(this);
     bar = new RoundProgressBar();
     layout->addWidget(bar);
-    // TODO add CPBar. Split 100 and % sign
 
     connect(&lic, &LoaderIncrementerThread::finished, this, &Loading::fade_out);
     connect(&lic, &LoaderIncrementerThread::value_changed, this, &Loading::show_progress);
@@ -57,7 +56,7 @@ void Loading::fade_out()
 void Loading::show_progress()
 {
     int progress = lic.get();
-    QString loaded = QString::number(progress) + "%";
+    QString loaded = QString::number(progress);
     ui->lbl_loaded->setText(loaded);
     bar->upd(static_cast<double>(progress) / 100);
 }
